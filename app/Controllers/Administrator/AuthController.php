@@ -2,6 +2,7 @@
 namespace App\Controllers\Administrator;
 
 use App\Controllers\BaseController;
+use App\Models\UserModel;
 
 class AuthController extends BaseController
 {
@@ -19,10 +20,34 @@ class AuthController extends BaseController
     public function login()
     {
         if ($this->request->getMethod() == 'post'){
-            return $this->request->getMethod();
+            try {
+                helper('form');
+                $rules = [
+                    'username' => 'required',
+                    'password'  => 'required'
+                ];
+                if ($this->validate($rules)){
+                    $session = session();
+                    $user = new UserModel();
+                    $username = $this->request->getVar('username');
+                    $password = $this->request->getVar('password');
+                    $data = $user->where('username', $username)->first();
+                    if ($data){
+                    }
+                }
+                else {
+                    throw new \Exception($this->validator);
+                }
+            }
+            catch (\Exception $e){
+
+            }
+
+
         }
         else {
             $this->data['title'] = 'Masuk';
+            helper('form');
             return view('administrator/login', $this->data);
         }
     }
